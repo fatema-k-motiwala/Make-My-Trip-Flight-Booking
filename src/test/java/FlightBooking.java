@@ -1,6 +1,12 @@
 import java.time.Duration;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
+
+import javax.lang.model.element.Element;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -26,29 +32,75 @@ public class FlightBooking {
         driver.get("https://www.makemytrip.com/");
         
         //Closing pop-ups
-        driver.findElement(By.xpath("//span[@data-cy='closeModal']")).click();
-        driver.findElement(By.xpath("//span[@data-cy='CustomModal_10']")).click();
-        
+        try {
+        	driver.findElement(By.xpath("//span[@data-cy='closeModal']")).click();
+            driver.findElement(By.xpath("//span[@data-cy='CustomModal_10']")).click();	
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+                
         //Selecting From City
         Actions action = new Actions(driver);
-        WebElement fromCity = driver.findElement(By.xpath("//div[@data-cy='flightSW']//input[@id='fromCity']"));
+        WebElement fromCity = driver.findElement(By.id("fromCity"));
         fromCity.click();
         Thread.sleep(2000);
-        fromCity.sendKeys("Mumbai");
-        Thread.sleep(2000);
-        action.sendKeys(Keys.ARROW_DOWN).sendKeys(Keys.ENTER).build().perform();
-
-//      Selecting To City
-        WebElement toCity = driver.findElement(By.xpath("//div[@data-cy='flightSW']//input[@id='toCity']"));
-        toCity.click();
-        WebElement toCityInput = driver.findElement(By.xpath("//div[@data-cy='flightSW']//input[@placeholder='To']"));
-        Thread.sleep(2000);
-        toCityInput.sendKeys("Dubai");
+        WebElement inputFromCity = driver.findElement(By.xpath("//input[@placeholder='From']"));
+        inputFromCity.sendKeys("Mumbai");
         Thread.sleep(2000);
         action.sendKeys(Keys.ARROW_DOWN).sendKeys(Keys.ENTER).build().perform();
         
-        Thread.sleep(5000);
-        driver.quit();
+//      Selecting To City
+        WebElement toCity = driver.findElement(By.id("toCity"));
+        toCity.click();
+        WebElement inputToCity= driver.findElement(By.xpath("//input[@placeholder='To']"));
+        Thread.sleep(2000);
+        inputToCity.sendKeys("Dubai");
+        Thread.sleep(2000);
+        action.sendKeys(Keys.ARROW_DOWN).sendKeys(Keys.ENTER).build().perform();
+        
+// 	    Accepting Date From Customer 
+        Scanner scanner = new Scanner(System.in);
+		System.out.println("Enter date in this format: dd/MM/yyyy\n");
+		String inputDate  = scanner.nextLine();
+		
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		LocalDate ld = LocalDate.parse(inputDate, dtf);
+		LocalDate today = LocalDate.now();
+		
+		while (ld.isBefore(today)) {
+	        System.out.println("Date must be today or later.");
+	        System.out.println("Enter date in this format: dd/MM/yyyy\n");
+			inputDate  = scanner.nextLine();
+			dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+			ld = LocalDate.parse(inputDate, dtf);
+	    } 
+		scanner.close();
+		String day = String.valueOf(ld.getDayOfMonth());
+		DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("MMMM");
+		String month = ld.format(monthFormatter); // Gives "January", "February", etc.
+		String year = String.valueOf(ld.getYear());
+		String reqmonthyr = month + " " + year;
+		
+//		Selecting departure date
+		String currentmonthyr = driver.findElement(By.xpath("(//div[@class='DayPicker-Caption'])[1]/div")).getText();
+		
+		while(!(currentmonthyr.equals(reqmonthyr))){
+			driver.findElement(By.xpath("//span[@aria-label='Next Month']")).click();
+			currentmonthyr = driver.findElement(By.xpath("(//div[@class='DayPicker-Caption'])[1]/div")).getText();
+		}
+		List<WebElement> dates = driver.findElements(By.xpath("(//div[@class='DayPicker-Month'])[1]//div[@class='dateInnerCell']/p[1]"));
+		for	(WebElement date : dates) {
+			if(date.getText().equals(day)) {
+				date.click();
+				break;
+			}
+		}
+		
+		
+		
+//            
+//        Thread.sleep(5000);
+//        driver.quit();
 
 	}
 }
