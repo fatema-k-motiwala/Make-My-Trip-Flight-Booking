@@ -2,12 +2,12 @@
 <testng-results ignored="0" total="1" passed="1" failed="0" skipped="0">
   <reporter-output>
   </reporter-output>
-  <suite started-at="2025-04-29T19:12:12 GST" name="Default suite" finished-at="2025-04-29T19:12:55 GST" duration-ms="42756">
+  <suite started-at="2025-04-30T18:20:32 GST" name="Default suite" finished-at="2025-04-30T18:21:14 GST" duration-ms="41936">
     <groups>
     </groups>
-    <test started-at="2025-04-29T19:12:12 GST" name="Default test" finished-at="2025-04-29T19:12:55 GST" duration-ms="42756">
+    <test started-at="2025-04-30T18:20:32 GST" name="Default test" finished-at="2025-04-30T18:21:14 GST" duration-ms="41936">
       <class name="FlightBooking">
-        <test-method signature="bookFlight()[pri:0, instance:FlightBooking@77847718]" started-at="2025-04-29T19:12:12 GST" name="bookFlight" finished-at="2025-04-29T19:12:55 GST" duration-ms="42721" status="PASS">
+        <test-method signature="bookFlight()[pri:0, instance:FlightBooking@77847718]" started-at="2025-04-30T18:20:32 GST" name="bookFlight" finished-at="2025-04-30T18:21:14 GST" duration-ms="41893" status="PASS">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- bookFlight -->
