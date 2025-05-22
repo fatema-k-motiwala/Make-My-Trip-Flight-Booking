@@ -69,6 +69,41 @@ public class FlightBooking {
 				ldReturn = LocalDate.parse(returnDate, dtf);
 			}
 		}
+//		No of Travellers
+		System.out.println("Enter number of Adult Travellers (12y+)");
+		int adult = scanner.nextInt();
+		while ((adult < 1) || (adult > 9)) {
+			System.out.println("Please enter a number between 1 and 9");
+			adult = scanner.nextInt();
+		}
+		System.out.println("Enter number of Child Travellers (2y - 12y)");
+		int child = scanner.nextInt();
+		while ((child < 0) || (child > 6)) {
+			System.out.println("Please enter a number between 0 and 6");
+			child = scanner.nextInt();
+		}
+		System.out.println("Enter number of Infant Travellers (Below 2y)");
+		int infant = scanner.nextInt();
+		while (infant > adult) {
+			System.out.println("Number of infants can be more than number of adults. Please enter aagain");
+			infant = scanner.nextInt();
+				while ((infant < 0) || (infant > 6)) {
+					System.out.println("Please enter a number between 0 and 6");
+					infant = scanner.nextInt();	
+			}
+		}
+
+//		Travel Class
+		System.out.println("Please choose Travel Class");
+		System.out.println("1 for Economy/Premium Economy");
+		System.out.println("2 for Premium Economy");
+		System.out.println("3 for Business");
+		System.out.println("4 for First Class");
+		int travel_class = scanner.nextInt();
+		while ((travel_class < 1) || (travel_class > 4)) {
+			System.out.println("Please enter a number between 1 and 4");
+			travel_class = scanner.nextInt();
+		}
 		scanner.close();
 
 //      Opening site and Closing pop-ups
@@ -117,8 +152,8 @@ public class FlightBooking {
 			driver.findElement(By.xpath("//span[@aria-label='Next Month']")).click();
 			currentmonthyr = driver.findElement(By.xpath("(//div[@class='DayPicker-Caption'])[1]/div")).getText();
 		}
-		List<WebElement> dates = driver
-				.findElements(By.xpath("//div[@class='DayPicker-Day'][not(contains(@class, 'outside'))]//div[@class='dateInnerCell']/p[1]"));
+		List<WebElement> dates = driver.findElements(By.xpath(
+				"//div[@class='DayPicker-Day'][not(contains(@class, 'outside'))]//div[@class='dateInnerCell']/p[1]"));
 		for (WebElement date : dates) {
 			if (date.getText().equals(day)) {
 				date.click();
@@ -137,20 +172,28 @@ public class FlightBooking {
 				driver.findElement(By.xpath("//span[@aria-label='Next Month']")).click();
 				currentmonthyr = driver.findElement(By.xpath("(//div[@class='DayPicker-Caption'])[1]/div")).getText();
 			}
-			dates = driver
-					.findElements(By.xpath("//div[@class='DayPicker-Day'][not(contains(@class, 'outside'))]//div[@class='dateInnerCell']/p[1]"));
+			dates = driver.findElements(By.xpath(
+					"//div[@class='DayPicker-Day'][not(contains(@class, 'outside'))]//div[@class='dateInnerCell']/p[1]"));
 			for (WebElement date : dates) {
 				if (date.getText().equals(day)) {
 					date.click();
 					break;
 				}
 			}
-
 		}
+//		Entering Number of Travellers
+		driver.findElement(By.xpath("//*[@data-cy='travellerText']")).click();
+		driver.findElement(By.xpath("//li[@data-cy='adults-" + adult + "']")).click();
+		driver.findElement(By.xpath("//li[@data-cy='children-" + child + "']")).click();
+		driver.findElement(By.xpath("//li[@data-cy='infants-" + infant + "']")).click();
+		driver.findElement(By.xpath("//li[@data-cy='travelClass-" + (travel_class - 1) + "']")).click();
+		Thread.sleep(5000);
 
-            
-        Thread.sleep(5000);
-        driver.quit();
+		driver.findElement(By.xpath("//button[@data-cy='travellerApplyBtn']")).click();
+		driver.findElement(By.xpath("//p[@data-cy='submit']/a")).click();
+		
+		driver.quit();
+		Thread.sleep(5000);
 
 	}
 }
